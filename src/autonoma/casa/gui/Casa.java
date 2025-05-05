@@ -1,21 +1,35 @@
+// Este es el paquete donde se ubica la clase Casa.
 package autonoma.casa.gui;
 
+// Importamos las clases necesarias
 import autonoma.casa.elements.Meteorito;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 
+/**
+ * Clase que representa una ventana con una casa y meteoritos cayendo.
+ *
+ * @author Cristian Camilo Salazar Arenas
+ * @version 1.0
+ * @since 2025.05.04
+ */
 public class Casa extends javax.swing.JFrame {
-    
+
+    /**
+     * Lista que contiene los meteoritos que caerán.
+     */
     private ArrayList<Meteorito> meteoritos;
 
-    //Constructor del JFrame
+    /**
+     * Constructor que inicializa la ventana y crea los meteoritos.
+     */
     public Casa() {
         initComponents();
-        this.setSize(700, 700);
-        this.setLocationRelativeTo(null);
-        
-        // Inicializamos la lista de meteoritos
+        this.setSize(700, 700); // Tamaño de la ventana
+        this.setLocationRelativeTo(null); // Centrar ventana
+
+        // Creamos 7 meteoritos con diferentes posiciones y velocidades
         meteoritos = new ArrayList<>();
         meteoritos.add(new Meteorito(50, 0, 30, 30, 3, Color.LIGHT_GRAY));
         meteoritos.add(new Meteorito(100, 0, 30, 30, 4, Color.GRAY));
@@ -24,65 +38,77 @@ public class Casa extends javax.swing.JFrame {
         meteoritos.add(new Meteorito(400, 200, 30, 30, 3, Color.GRAY));
         meteoritos.add(new Meteorito(500, 100, 30, 30, 4, Color.DARK_GRAY));
         meteoritos.add(new Meteorito(650, 0, 30, 30, 5, Color.LIGHT_GRAY));
-        
-        // Iniciamos hilo para moverlos
+
+        // Hilo para animar los meteoritos
         Thread hilo = new Thread(() -> {
             while (true) {
+                // Mueve y verifica cada meteorito
                 for (Meteorito m : meteoritos) {
                     m.mover();
-                    m.reiniciarSiLlegaAbajo(700);
+                    m.reiniciarSiLlegaAbajo(700); // Límite inferior de la ventana
                 }
-                repaint(); // redibuja la pantalla
+                repaint(); // Redibuja la escena
                 try {
-                    Thread.sleep(30);
+                    Thread.sleep(30); // ~33 FPS
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
         });
-        hilo.start();
+        hilo.start(); // Inicia la animación
     }
-    
+
+    /**
+     * Método que dibuja todos los elementos gráficos.
+     *
+     * @param g El objeto Graphics para dibujar
+     */
     @Override
-    public void paint(Graphics g){
-        super.paint(g); // importante para que la ventana se pinte bien
-        //Alrededores
-        //Creación del cielo
+    public void paint(Graphics g) {
+        super.paint(g); // Importante para el correcto pintado
+
+        // Fondo - Cielo
         g.setColor(Color.BLUE);
         g.fillRect(0, 0, 700, 450);
-        //Creación del pasto
-        g.setColor(Color.green);
+
+        // Fondo - Pasto
+        g.setColor(Color.GREEN);
         g.fillRect(0, 450, 700, 250);
-        //Creación de la casa
-        //Creación de las paredes
-        g.setColor(Color.cyan);
+
+        // Casa - Paredes
+        g.setColor(Color.CYAN);
         g.fillRect(250, 300, 200, 150);
-        //Creación del techo
-        int[] x = {225, 350, 475};
-        int[] y = {300, 200, 300};
+
+        // Casa - Techo (triángulo)
+        int[] xTecho = {225, 350, 475};
+        int[] yTecho = {300, 200, 300};
         g.setColor(Color.RED);
-        g.fillPolygon(x, y, 3);
-        //Creación de la puerta
+        g.fillPolygon(xTecho, yTecho, 3);
+
+        // Casa - Puerta
         g.fillRect(325, 370, 50, 80);
-        //Creación de las ventanas
+
+        // Casa - Ventanas
         g.setColor(Color.BLACK);
-        g.fillRect(275, 370, 25, 25);//Ventana izquierda
-        g.fillRect(400, 370, 25, 25);//Ventana derecha
-        //Creación del árbol
-        //Creación de las hojas
+        g.fillRect(275, 370, 25, 25); // Ventana izquierda
+        g.fillRect(400, 370, 25, 25); // Ventana derecha
+
+        // Árbol - Hojas
         g.setColor(Color.GREEN);
         g.fillOval(575, 250, 50, 50);
         g.fillOval(550, 275, 50, 50);
         g.fillOval(600, 275, 50, 50);
         g.fillOval(575, 275, 50, 50);
-        //Creación del tronco
-        g.setColor(new Color(139, 69, 19));
+
+        // Árbol - Tronco
+        g.setColor(new Color(139, 69, 19)); // Color marrón
         g.fillRect(585, 325, 30, 125);
-        //Creación del sol
+
+        // Sol
         g.setColor(Color.YELLOW);
         g.fillOval(580, 75, 70, 70);
-        //Creación de los meteoritos
-        //Usamos un for each para dibujar cada meteorito
+
+        // Dibujamos todos los meteoritos
         for (Meteorito m : meteoritos) {
             m.dibujar(g);
         }
@@ -107,11 +133,14 @@ public class Casa extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+    /**
+     * Método principal para ejecutar la aplicación.
+     *
+     * @param args Argumentos de línea de comandos
+     */
     public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Casa().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new Casa().setVisible(true); // Mostrar ventana
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
